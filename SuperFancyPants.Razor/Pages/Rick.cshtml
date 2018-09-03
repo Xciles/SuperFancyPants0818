@@ -1,0 +1,17 @@
+﻿@page
+@model SuperFancyPants.Razor.Pages.RickModel
+@{
+    ViewData["Title"] = "Rick";
+}
+
+<h2>Rick</h2>
+
+
+@Model.NotMessage
+
+
+<form asp-page="Rick">
+    <input asp-for="Value" />
+
+    <input type="submit" />
+</form>

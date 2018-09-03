@@ -1,0 +1,14 @@
+﻿@page
+@model SuperFancyPants.Razor.Pages.ExternalApiModel
+@{
+    ViewData["Title"] = "ExternalApi";
+}
+
+<h2>ExternalApi</h2>
+
+@foreach (var modelUserAccount in Model.UserAccounts)
+{
+    <div>
+        <p>@modelUserAccount.Name</p>
+    </div>
+}
