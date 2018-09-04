@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperFancyPants.Razor", "SuperFancyPants.Razor\SuperFancyPants.Razor.csproj", "{84FFC73F-9D74-4903-B171-6DFDE2C246B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperFancyPants.Razor", "SuperFancyPants.Razor\SuperFancyPants.Razor.csproj", "{84FFC73F-9D74-4903-B171-6DFDE2C246B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperFancyPants.RazorIdentity", "SuperFancyPants.RazorIdentity\SuperFancyPants.RazorIdentity.csproj", "{BC85FD82-7612-4D23-B21C-0A9D0A37C6D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperFancyPants.RazorIdentity", "SuperFancyPants.RazorIdentity\SuperFancyPants.RazorIdentity.csproj", "{BC85FD82-7612-4D23-B21C-0A9D0A37C6D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperFancyPants.Generics", "SuperFancyPants.Generics\SuperFancyPants.Generics.csproj", "{FF4E14DF-24BE-4841-83A1-4D5E1ABBF3E6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{BC85FD82-7612-4D23-B21C-0A9D0A37C6D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC85FD82-7612-4D23-B21C-0A9D0A37C6D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC85FD82-7612-4D23-B21C-0A9D0A37C6D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF4E14DF-24BE-4841-83A1-4D5E1ABBF3E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF4E14DF-24BE-4841-83A1-4D5E1ABBF3E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF4E14DF-24BE-4841-83A1-4D5E1ABBF3E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF4E14DF-24BE-4841-83A1-4D5E1ABBF3E6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
