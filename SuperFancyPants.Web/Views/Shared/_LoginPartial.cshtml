@@ -1,7 +1,8 @@
 @using Microsoft.AspNetCore.Identity
+@using SuperFancyPants.Web.Data
 
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<UserAccount> SignInManager
+@inject UserManager<UserAccount> UserManager
 
 @if (SignInManager.IsSignedIn(User))
 {

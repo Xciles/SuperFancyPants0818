@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,16 +13,19 @@ namespace SuperFancyPants.Web.Controllers
     public class TodoController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<UserAccount> _userManager;
 
-        public TodoController(ApplicationDbContext context)
+        public TodoController(ApplicationDbContext context, UserManager<UserAccount> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Todo
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Todos.ToListAsync());
+            var userId = _userManager.GetUserId(User);
+            return View(await _context.Todos.Where(x => x.UserAccountId.Equals(userId)).ToListAsync());
         }
 
         // GET: Todo/Details/5
@@ -57,6 +61,8 @@ namespace SuperFancyPants.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                todo.UserAccountId = _userManager.GetUserId(User);
+
                 _context.Add(todo);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
