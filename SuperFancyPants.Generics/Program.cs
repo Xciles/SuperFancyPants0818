@@ -1,9 +1,18 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SuperFancyPants.Generics
 {
+    public class LinkedList
+    {
+        public class Node
+        {
+            public string Data { get; set; }
+        }
+    }
+
     public class CustomList<T>
     {
         private IList<T> _listOfItems = new List<T>();
@@ -48,6 +57,14 @@ namespace SuperFancyPants.Generics
             object o = i;
 
             var todo = new Todo { Name = "hiueht", Description = "ilryuthertilyegrt eruy " };
+
+            var listTodos = new List<Todo> { todo, todo, todo, todo, todo };
+            List<Todo> allHansItems = listTodos.Where(x => x.Name.Equals("Hans")).ToList();
+
+            var anon = listTodos.Where(x => x.Name.Equals("Hans")).Select(x => new { Description = x.Description });
+            var anon2 = (from t in listTodos
+                         where t.Name.Equals("Hans")
+                         select new { Description = t.Description });
 
             ParseTodo(todo);
 
