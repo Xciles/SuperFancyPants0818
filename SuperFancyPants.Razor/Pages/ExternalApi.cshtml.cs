@@ -59,10 +59,16 @@ namespace SuperFancyPants.Razor.Pages
             var client = _clientFactory.CreateClient("jsonApi");
             string result = await client.GetStringAsync("users");
 
+            UserAccounts = JsonConvert.DeserializeObject<IList<UserAccount>>(result);
+
+            //var random = new Random();
+            //var result = random.Next(0, UserAccounts.Count);
+
+            //var user = UserAccounts[UserAccounts.Count];
+
+
             //var client = _clientFactory.CreateClient();
             //string result = await client.GetStringAsync("https://jsonplaceholder.typicode.com/users");
-
-            UserAccounts = JsonConvert.DeserializeObject<IList<UserAccount>>(result);
 
 
             //using (HttpClient client = new HttpClient())
