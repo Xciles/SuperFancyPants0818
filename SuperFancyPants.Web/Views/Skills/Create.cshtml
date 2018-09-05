@@ -1,4 +1,5 @@
-﻿@model SuperFancyPants.Web.Domain.Movie
+﻿@using SuperFancyPants.Web.Domain
+@model SuperFancyPants.Web.Domain.Skill
 
 @{
     ViewData["Title"] = "Create";
@@ -6,7 +7,7 @@
 
 <h2>Create</h2>
 
-<h4>Movie</h4>
+<h4>Skill</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -18,9 +19,14 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UserAccountId" class="control-label"></label>
-                @*<select asp-for="UserAccountIds" class ="form-control" asp-items="ViewBag.UserAccountIds" multiple="multiple"></select>*@
-                <select asp-for="UserAccountId" class ="form-control" asp-items="ViewBag.UserAccountIds"></select>
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Level" class="control-label"></label>
+                <select asp-for="Level" asp-items="Html.GetEnumSelectList<ELevel>()" class="form-control"></select>
+                <span asp-validation-for="Level" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />

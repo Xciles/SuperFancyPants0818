@@ -10,23 +10,22 @@ using SuperFancyPants.Web.Domain;
 
 namespace SuperFancyPants.Web.Controllers
 {
-    public class MovieController : Controller
+    public class SkillsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public MovieController(ApplicationDbContext context)
+        public SkillsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Movie
+        // GET: Skills
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Movie.Include(m => m.UserAccount);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await _context.Skills.ToListAsync());
         }
 
-        // GET: Movie/Details/5
+        // GET: Skills/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,74 +33,62 @@ namespace SuperFancyPants.Web.Controllers
                 return NotFound();
             }
 
-            var movie = await _context.Movie
-                .Include(m => m.UserAccount)
+            var skill = await _context.Skills
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (movie == null)
+            if (skill == null)
             {
                 return NotFound();
             }
 
-            return View(new MovieViewModel
-            {
-                MovieId = movie.Id,
-                Name = movie.Name,
-                Email = movie.UserAccount?.Email
-            });
+            return View(skill);
         }
 
-        // GET: Movie/Create
+        // GET: Skills/Create
         public IActionResult Create()
         {
-            //ViewData["UserAccountIds"] = new SelectList(_context.Users, "Id", "Email");
-            ViewData["UserAccountId"] = new SelectList(_context.Users, "Id", "Email");
             return View();
         }
 
-        // POST: Movie/Create
+        // POST: Skills/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create([Bind("Id,Name,UserAccountIds")] Movie movie)
-        public async Task<IActionResult> Create([Bind("Id,Name,UserAccountId")] Movie movie)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description,Level")] Skill skill)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(movie);
+                _context.Add(skill);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["UserAccountIds"] = new SelectList(_context.Users, "Id", "Email", movie.UserAccountId);
-            ViewData["UserAccountId"] = new SelectList(_context.Users, "Id", "Email", movie.UserAccountId);
-            return View(movie);
+            return View(skill);
         }
 
-        // GET: Movie/Edit/5
-        public async Task<IActionResult> Edit(int? id, string test)
+        // GET: Skills/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var movie = await _context.Movie.FindAsync(id);
-            if (movie == null)
+            var skill = await _context.Skills.FindAsync(id);
+            if (skill == null)
             {
                 return NotFound();
             }
-            ViewData["UserAccountId"] = new SelectList(_context.Users, "Id", "Id", movie.UserAccountId);
-            return View(movie);
+            return View(skill);
         }
 
-        // POST: Movie/Edit/5
+        // POST: Skills/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,UserAccountId")] Movie movie)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Level")] Skill skill)
         {
-            if (id != movie.Id)
+            if (id != skill.Id)
             {
                 return NotFound();
             }
@@ -110,12 +97,12 @@ namespace SuperFancyPants.Web.Controllers
             {
                 try
                 {
-                    _context.Update(movie);
+                    _context.Update(skill);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MovieExists(movie.Id))
+                    if (!SkillExists(skill.Id))
                     {
                         return NotFound();
                     }
@@ -124,15 +111,12 @@ namespace SuperFancyPants.Web.Controllers
                         throw;
                     }
                 }
-                //return RedirectToAction("Edit", "Movie", new { id = movie.Id, test = "een waarde" });
-
-                return RedirectToAction("Contact", "Home");
+                return RedirectToAction(nameof(Index));
             }
-            ViewData["UserAccountId"] = new SelectList(_context.Users, "Id", "Id", movie.UserAccountId);
-            return View(movie);
+            return View(skill);
         }
 
-        // GET: Movie/Delete/5
+        // GET: Skills/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -140,31 +124,30 @@ namespace SuperFancyPants.Web.Controllers
                 return NotFound();
             }
 
-            var movie = await _context.Movie
-                .Include(m => m.UserAccount)
+            var skill = await _context.Skills
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (movie == null)
+            if (skill == null)
             {
                 return NotFound();
             }
 
-            return View(movie);
+            return View(skill);
         }
 
-        // POST: Movie/Delete/5
-        [HttpPost]
+        // POST: Skills/Delete/5
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var movie = await _context.Movie.FindAsync(id);
-            _context.Movie.Remove(movie);
+            var skill = await _context.Skills.FindAsync(id);
+            _context.Skills.Remove(skill);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool MovieExists(int id)
+        private bool SkillExists(int id)
         {
-            return _context.Movie.Any(e => e.Id == id);
+            return _context.Skills.Any(e => e.Id == id);
         }
     }
 }

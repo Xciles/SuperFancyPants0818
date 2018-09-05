@@ -9,5 +9,6 @@ namespace SuperFancyPants.Web.Domain
 
         public IList<Todo> Todos { get; set; }
         public IList<Movie> Movies { get; set; }
+        public IList<SkillToUserAccount> SkillToUserAccounts { get; set; }
     }
 }

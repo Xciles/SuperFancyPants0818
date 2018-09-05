@@ -11,6 +11,8 @@ namespace SuperFancyPants.Web.Data
     {
         public DbSet<Movie> Movie { get; set; }
         public DbSet<Todo> Todos { get; set; }
+        public DbSet<Skill> Skills { get; set; }
+        public DbSet<SkillToUserAccount> SkillToUserAccounts { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
