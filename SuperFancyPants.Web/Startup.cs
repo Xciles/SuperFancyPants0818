@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using SuperFancyPants.Web.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SuperFancyPants.Web.Domain;
 
 namespace SuperFancyPants.Web
 {

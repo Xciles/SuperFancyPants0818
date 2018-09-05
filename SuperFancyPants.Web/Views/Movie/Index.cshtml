@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SuperFancyPants.Web.Data.Movie>
+﻿@model IEnumerable<SuperFancyPants.Web.Domain.Movie>
 
 @{
     ViewData["Title"] = "Index";
@@ -31,7 +31,7 @@
                 @Html.DisplayFor(modelItem => item.UserAccount.Id)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Edit" asp-route-id="@item.Id" asp-route-test="Hello">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>

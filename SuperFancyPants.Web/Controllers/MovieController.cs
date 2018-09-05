@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SuperFancyPants.Web.Data;
+using SuperFancyPants.Web.Domain;
 
 namespace SuperFancyPants.Web.Controllers
 {
@@ -41,7 +42,12 @@ namespace SuperFancyPants.Web.Controllers
                 return NotFound();
             }
 
-            return View(movie);
+            return View(new MovieViewModel
+            {
+                MovieId = movie.Id,
+                Name = movie.Name,
+                Email = movie.UserAccount?.Email
+            });
         }
 
         // GET: Movie/Create
@@ -69,7 +75,7 @@ namespace SuperFancyPants.Web.Controllers
         }
 
         // GET: Movie/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, string test)
         {
             if (id == null)
             {
@@ -115,7 +121,9 @@ namespace SuperFancyPants.Web.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                //return RedirectToAction("Edit", "Movie", new { id = movie.Id, test = "een waarde" });
+
+                return RedirectToAction("Contact", "Home");
             }
             ViewData["UserAccountId"] = new SelectList(_context.Users, "Id", "Id", movie.UserAccountId);
             return View(movie);
@@ -141,7 +149,7 @@ namespace SuperFancyPants.Web.Controllers
         }
 
         // POST: Movie/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

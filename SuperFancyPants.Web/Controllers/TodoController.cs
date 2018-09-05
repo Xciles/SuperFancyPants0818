@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SuperFancyPants.Web.Data;
+using SuperFancyPants.Web.Domain;
 
 namespace SuperFancyPants.Web.Controllers
 {

@@ -1,4 +1,5 @@
-﻿@model SuperFancyPants.Web.Data.Movie
+﻿@using SuperFancyPants.Web.Domain
+@model MovieViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -17,14 +18,14 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.UserAccount)
+            @Html.DisplayNameFor(model => model.Email)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.UserAccount.Id)
+            @Html.DisplayFor(model => model.Email)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.MovieId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
