@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,28 +9,23 @@ using SuperFancyPants.Web.Data;
 
 namespace SuperFancyPants.Web.Controllers
 {
-    public class TodoController : Controller
+    public class MovieController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<UserAccount> _userManager;
 
-        public TodoController(ApplicationDbContext context, UserManager<UserAccount> userManager)
+        public MovieController(ApplicationDbContext context)
         {
             _context = context;
-            _userManager = userManager;
         }
 
-        // GET: Todo
+        // GET: Movie
         public async Task<IActionResult> Index()
         {
-            var userId = _userManager.GetUserId(User);
-            //var list = _context.Set<Movie>().Where(x => x.UserAccountId.Equals(userId)).ToListAsync();
-
-
-            return View(await _context.Todos.Where(x => x.UserAccountId.Equals(userId)).ToListAsync());
+            var applicationDbContext = _context.Movie.Include(m => m.UserAccount);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Todo/Details/5
+        // GET: Movie/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -39,41 +33,42 @@ namespace SuperFancyPants.Web.Controllers
                 return NotFound();
             }
 
-            var todo = await _context.Todos
+            var movie = await _context.Movie
+                .Include(m => m.UserAccount)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (todo == null)
+            if (movie == null)
             {
                 return NotFound();
             }
 
-            return View(todo);
+            return View(movie);
         }
 
-        // GET: Todo/Create
+        // GET: Movie/Create
         public IActionResult Create()
         {
+            ViewData["UserAccountId"] = new SelectList(_context.Users, "Id", "Email");
             return View();
         }
 
-        // POST: Todo/Create
+        // POST: Movie/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description")] Todo todo)
+        public async Task<IActionResult> Create([Bind("Id,Name,UserAccountId")] Movie movie)
         {
             if (ModelState.IsValid)
             {
-                todo.UserAccountId = _userManager.GetUserId(User);
-
-                _context.Add(todo);
+                _context.Add(movie);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(todo);
+            ViewData["UserAccountId"] = new SelectList(_context.Users, "Id", "Id", movie.UserAccountId);
+            return View(movie);
         }
 
-        // GET: Todo/Edit/5
+        // GET: Movie/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,22 +76,23 @@ namespace SuperFancyPants.Web.Controllers
                 return NotFound();
             }
 
-            var todo = await _context.Todos.FindAsync(id);
-            if (todo == null)
+            var movie = await _context.Movie.FindAsync(id);
+            if (movie == null)
             {
                 return NotFound();
             }
-            return View(todo);
+            ViewData["UserAccountId"] = new SelectList(_context.Users, "Id", "Id", movie.UserAccountId);
+            return View(movie);
         }
 
-        // POST: Todo/Edit/5
+        // POST: Movie/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,UserAccountId")] Todo todo)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,UserAccountId")] Movie movie)
         {
-            if (id != todo.Id)
+            if (id != movie.Id)
             {
                 return NotFound();
             }
@@ -105,12 +101,12 @@ namespace SuperFancyPants.Web.Controllers
             {
                 try
                 {
-                    _context.Update(todo);
+                    _context.Update(movie);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TodoExists(todo.Id))
+                    if (!MovieExists(movie.Id))
                     {
                         return NotFound();
                     }
@@ -121,10 +117,11 @@ namespace SuperFancyPants.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(todo);
+            ViewData["UserAccountId"] = new SelectList(_context.Users, "Id", "Id", movie.UserAccountId);
+            return View(movie);
         }
 
-        // GET: Todo/Delete/5
+        // GET: Movie/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -132,30 +129,31 @@ namespace SuperFancyPants.Web.Controllers
                 return NotFound();
             }
 
-            var todo = await _context.Todos
+            var movie = await _context.Movie
+                .Include(m => m.UserAccount)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (todo == null)
+            if (movie == null)
             {
                 return NotFound();
             }
 
-            return View(todo);
+            return View(movie);
         }
 
-        // POST: Todo/Delete/5
+        // POST: Movie/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var todo = await _context.Todos.FindAsync(id);
-            _context.Todos.Remove(todo);
+            var movie = await _context.Movie.FindAsync(id);
+            _context.Movie.Remove(movie);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TodoExists(int id)
+        private bool MovieExists(int id)
         {
-            return _context.Todos.Any(e => e.Id == id);
+            return _context.Movie.Any(e => e.Id == id);
         }
     }
 }

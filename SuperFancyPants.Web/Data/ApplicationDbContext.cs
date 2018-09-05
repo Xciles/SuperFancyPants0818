@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SuperFancyPants.Web.Data;
 
 namespace SuperFancyPants.Web.Data
 {
@@ -14,18 +15,9 @@ namespace SuperFancyPants.Web.Data
         public int Id { get; set; }
         public string Name { get; set; }
 
-        //public IList<MovieToUserAccount> MovieToUserAccounts { get; set; }
-        //public IList<UserAccount> UserAccounts { get; set; }
+        public UserAccount UserAccount { get; set; }
+        public string UserAccountId { get; set; }
     }
-
-    //public class MovieToUserAccount
-    //{
-    //    public Movie Movie { get; set; }
-    //    public UserAccount UserAccount { get; set; }
-
-    //    public int MovieId { get; set; }
-    //    public string UserAccountId { get; set; }
-    //}
 
     public class Todo
     {
@@ -44,17 +36,18 @@ namespace SuperFancyPants.Web.Data
         public string FirstName { get; set; }
 
         public IList<Todo> Todos { get; set; }
-        //public IList<MovieToUserAccount> MovieToUserAccounts { get; set; }
-        //public IList<Movie> Movies { get; set; }
+        public IList<Movie> Movies { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<UserAccount>
     {
+        public DbSet<Movie> Movie { get; set; }
         public DbSet<Todo> Todos { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
+
     }
 }
