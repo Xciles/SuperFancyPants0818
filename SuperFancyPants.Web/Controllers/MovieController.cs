@@ -12,17 +12,17 @@ namespace SuperFancyPants.Web.Controllers
 {
     public class MovieController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _dbContext;
 
         public MovieController(ApplicationDbContext context)
         {
-            _context = context;
+            _dbContext = context;
         }
 
         // GET: Movie
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Movie.Include(m => m.UserAccount);
+            var applicationDbContext = _dbContext.Movie.Include(m => m.UserAccount);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -34,7 +34,7 @@ namespace SuperFancyPants.Web.Controllers
                 return NotFound();
             }
 
-            var movie = await _context.Movie
+            var movie = await _dbContext.Movie
                 .Include(m => m.UserAccount)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
@@ -54,7 +54,7 @@ namespace SuperFancyPants.Web.Controllers
         public IActionResult Create()
         {
             //ViewData["UserAccountIds"] = new SelectList(_context.Users, "Id", "Email");
-            ViewData["UserAccountId"] = new SelectList(_context.Users, "Id", "Email");
+            ViewData["UserAccountId"] = new SelectList(_dbContext.Users, "Id", "Email");
             return View();
         }
 
@@ -68,12 +68,12 @@ namespace SuperFancyPants.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(movie);
-                await _context.SaveChangesAsync();
+                _dbContext.Add(movie);
+                await _dbContext.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             //ViewData["UserAccountIds"] = new SelectList(_context.Users, "Id", "Email", movie.UserAccountId);
-            ViewData["UserAccountId"] = new SelectList(_context.Users, "Id", "Email", movie.UserAccountId);
+            ViewData["UserAccountId"] = new SelectList(_dbContext.Users, "Id", "Email", movie.UserAccountId);
             return View(movie);
         }
 
@@ -85,12 +85,12 @@ namespace SuperFancyPants.Web.Controllers
                 return NotFound();
             }
 
-            var movie = await _context.Movie.FindAsync(id);
+            var movie = await _dbContext.Movie.FindAsync(id);
             if (movie == null)
             {
                 return NotFound();
             }
-            ViewData["UserAccountId"] = new SelectList(_context.Users, "Id", "Id", movie.UserAccountId);
+            ViewData["UserAccountId"] = new SelectList(_dbContext.Users, "Id", "Id", movie.UserAccountId);
             return View(movie);
         }
 
@@ -110,8 +110,8 @@ namespace SuperFancyPants.Web.Controllers
             {
                 try
                 {
-                    _context.Update(movie);
-                    await _context.SaveChangesAsync();
+                    _dbContext.Update(movie);
+                    await _dbContext.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -128,7 +128,7 @@ namespace SuperFancyPants.Web.Controllers
 
                 return RedirectToAction("Contact", "Home");
             }
-            ViewData["UserAccountId"] = new SelectList(_context.Users, "Id", "Id", movie.UserAccountId);
+            ViewData["UserAccountId"] = new SelectList(_dbContext.Users, "Id", "Id", movie.UserAccountId);
             return View(movie);
         }
 
@@ -140,7 +140,7 @@ namespace SuperFancyPants.Web.Controllers
                 return NotFound();
             }
 
-            var movie = await _context.Movie
+            var movie = await _dbContext.Movie
                 .Include(m => m.UserAccount)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (movie == null)
@@ -156,15 +156,15 @@ namespace SuperFancyPants.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var movie = await _context.Movie.FindAsync(id);
-            _context.Movie.Remove(movie);
-            await _context.SaveChangesAsync();
+            var movie = await _dbContext.Movie.FindAsync(id);
+            _dbContext.Movie.Remove(movie);
+            await _dbContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool MovieExists(int id)
         {
-            return _context.Movie.Any(e => e.Id == id);
+            return _dbContext.Movie.Any(e => e.Id == id);
         }
     }
 }

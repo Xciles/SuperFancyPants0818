@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using SuperFancyPants.Web.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SuperFancyPants.Web.Business;
 using SuperFancyPants.Web.Domain;
 
 namespace SuperFancyPants.Web
@@ -35,9 +36,11 @@ namespace SuperFancyPants.Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddTransient<IUserSkills, UserSkills>();
+
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
             services.AddDefaultIdentity<UserAccount>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 

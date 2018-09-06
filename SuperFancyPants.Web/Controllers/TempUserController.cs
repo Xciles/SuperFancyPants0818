@@ -1,26 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using SuperFancyPants.Web.Data;
+using SuperFancyPants.Web.Business;
 using SuperFancyPants.Web.Domain;
 
 namespace SuperFancyPants.Web.Controllers
 {
     public class TempUserController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly UserManager<UserAccount> _userManager;
+        private readonly IUserSkills _userSkills;
 
-        public TempUserController(ApplicationDbContext context, UserManager<UserAccount> userManager)
+        public TempUserController(UserManager<UserAccount> userManager, IUserSkills userSkills)
         {
-            _context = context;
             _userManager = userManager;
+            _userSkills = userSkills;
         }
 
         [HttpGet]
@@ -33,25 +30,9 @@ namespace SuperFancyPants.Web.Controllers
                 return new UnauthorizedResult();
             }
 
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
-            var userSkills = await _context.SkillToUserAccounts
-                                            .Where(x => x.UserAccountId == userId)
-                                            .Select(x => x.SkillId)
-                                            .ToListAsync();
-
-            var skillOfUser = await _context.SkillToUserAccounts
-                                            .Where(x => x.UserAccountId == userId)
-                                            .Select(x => x.Skill)
-                                            .ToListAsync();
-
-
-
-            ViewData["SkillIds"] = new MultiSelectList(_context.Skills, "Id", "Name");
-            return View(new UserViewModel
-            {
-                FirstName = user.FirstName,
-                SkillIds = userSkills
-            });
+            var model = await _userSkills.GetIndexModel(userId);
+            ViewData["SkillIds"] = new MultiSelectList(await _userSkills.GetAllSkills(), "Id", "Name");
+            return View(model);
         }
 
         [HttpPost]
@@ -70,58 +51,22 @@ namespace SuperFancyPants.Web.Controllers
                     //return RedirectToAction("Contact", "Home");
                     return new UnauthorizedResult();
                 }
-
-                var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
-                user.FirstName = model.FirstName;
-
-                if (model.SkillIds != null)
-                {
-                    var skillToUserAccounts = await _context.SkillToUserAccounts
-                                                    .Where(x => x.UserAccountId == userId)
-                                                    .ToListAsync();
-
-                    //_context.SkillToUserAccounts.RemoveRange(skillToUserAccounts.Where(x => !model.SkillIds.Contains(x.SkillId)));
-                    //var skillToAdd = model.SkillIds.Except(skillToUserAccounts.Select(x => x.SkillId));
-
-                    foreach (var skillId in model.SkillIds)
-                    {
-                        _context.SkillToUserAccounts.Add(new SkillToUserAccount
-                        {
-                            UserAccountId = userId,
-                            SkillId = skillId
-                        });
-                    }
-
-                    //foreach (var skillToUserAccount in skillToUserAccounts)
-                    //{
-                    //    if (!model.SkillIds.Contains(skillToUserAccount.SkillId))
-                    //    {
-                    //        _context.SkillToUserAccounts.Remove(skillToUserAccount);
-                    //    }
-                    //}
-
-                    //foreach (var skillId in model.SkillIds)
-                    //{
-                    //    if (!skillToUserAccounts.Select(x => x.SkillId).Contains(skillId))
-                    //    {
-
-                    //    }
-                    //}
-                }
-
-                await _context.SaveChangesAsync();
+                
+                await _userSkills.UpdateUserSkills(userId, model);
                 return RedirectToAction("Index", "Todo");
             }
 
-            ViewData["SkillIds"] = new MultiSelectList(_context.Skills, "Id", "Name");
+            ViewData["SkillIds"] = new MultiSelectList(await _userSkills.GetAllSkills(), "Id", "Name");
             return View(model);
         }
     }
 
     public class UserViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Hey joh vul een FirstName in")]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
+        [Display(Name = "Skills")]
         public IList<int> SkillIds { get; set; }
     }
 }
