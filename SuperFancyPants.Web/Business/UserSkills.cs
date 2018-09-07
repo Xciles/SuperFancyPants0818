@@ -64,8 +64,8 @@ namespace SuperFancyPants.Web.Business
                     .Where(x => x.UserAccountId == userId)
                     .ToListAsync();
 
-                //_context.SkillToUserAccounts.RemoveRange(skillToUserAccounts.Where(x => !model.SkillIds.Contains(x.SkillId)));
-                //var skillToAdd = model.SkillIds.Except(skillToUserAccounts.Select(x => x.SkillId));
+                _context.SkillToUserAccounts.RemoveRange(skillToUserAccounts.Where(x => !model.SkillIds.Contains(x.SkillId)));
+                var skillToAdd = model.SkillIds.Except(skillToUserAccounts.Select(x => x.SkillId));
 
                 foreach (var skillId in model.SkillIds)
                 {
