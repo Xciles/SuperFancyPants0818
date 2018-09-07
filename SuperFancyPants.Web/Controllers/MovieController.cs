@@ -23,7 +23,9 @@ namespace SuperFancyPants.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _dbContext.Movie.Include(m => m.UserAccount);
-            return View(await applicationDbContext.ToListAsync());
+            var list = await applicationDbContext.ToListAsync();
+
+            return View(list);
         }
 
         // GET: Movie/Details/5
