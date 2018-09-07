@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SuperFancyPants.Web.Data;
@@ -13,10 +16,12 @@ namespace SuperFancyPants.Web.Controllers
     public class MovieController : Controller
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly UserManager<UserAccount> _userManager;
 
-        public MovieController(ApplicationDbContext context)
+        public MovieController(ApplicationDbContext context, UserManager<UserAccount> userManager)
         {
             _dbContext = context;
+            _userManager = userManager;
         }
 
         // GET: Movie
@@ -36,10 +41,12 @@ namespace SuperFancyPants.Web.Controllers
                 return NotFound();
             }
 
+            var userId = _userManager.GetUserId(User);
+
             var movie = await _dbContext.Movie
                 .Include(m => m.UserAccount)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (movie == null)
+            if (movie == null || movie.UserAccountId.Equals(userId))
             {
                 return NotFound();
             }
